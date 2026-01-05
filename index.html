@@ -326,24 +326,53 @@
 
         /* Animated Gen AI button */
         .gen-ai-button {
-            display: inline-block;
+            display: inline-flex;
             padding: 0.3rem 0.6rem;
             width: 280px;
-            text-align: center;
             background: #2a2a2a;
             color: white;
             border-radius: 4px;
             border: none;
             cursor: pointer;
-            transition: background 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            transition: background 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease, font-family 0s;
             font-weight: 500;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            line-height: 1.8;
+            font-size: 1rem;
+            align-items: center;
+            justify-content: center;
         }
 
         .gen-ai-button:hover {
             background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Button text wrapper for fade effect */
+        .button-text {
+            transition: opacity 0.3s ease;
+        }
+
+        /* AI pulsing dot */
+        .ai-dot {
+            display: inline-block;
+            width: 11px;
+            height: 11px;
+            background: #ff6b35;
+            border-radius: 50%;
+            margin-right: 0.6rem;
+            animation: aiPulse 1.4s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes aiPulse {
+            0%   { transform: scale(0.85); opacity: 0.4; }
+            50%  { transform: scale(1);    opacity: 1; }
+            100% { transform: scale(0.85); opacity: 0.4; }
         }
 
         /* Accent Dots */
@@ -429,7 +458,7 @@
         <div class="section">
             <div class="section-header">Objective</div>
             <div class="objective-text">
-                Looking to join a CPG rocket ship this summer as an intern who can get things done with limited oversight.
+                University of Virginia undergraduate seeking a summer internship at a high-growth CPG company. I'm a collaborative self-starter who delivers results with minimal oversight, using AI solutions to drive productivity and creative output.
             </div>
         </div>
 
@@ -442,7 +471,7 @@
                 <div class="job-meta">December 2025 - Present, NYC and Charlottesville, VA</div>
                 <ul class="job-description">
                     <li>Consulted on the launch of an AI-powered creative content studio</li>
-                    <li>Developed content and creative using AI for Coca-Cola, Suntory, Campari, and Hi-Chew</li>
+                    <li>Developed content and creative using AI for Coca-Cola (Minute Maid Spiked)</li>
                 </ul>
             </div>
 
@@ -468,7 +497,7 @@
             </div>
 
             <div class="job">
-                <div class="job-title">Cashier | Wegmans</div>
+                <div class="job-title">Cashier | Wegmans Grocery Store</div>
                 <div class="job-meta">March 2022 - May 2022, Charlottesville, VA</div>
             </div>
 
@@ -491,7 +520,7 @@
                 <div class="skill-label">Technical</div>
                 <div class="skill-value" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 0.5rem;">
                     <div>"Agentic" Workflow Development</div>
-                    <div><span class="gen-ai-button" id="genAiButton">gen ai content generation.</span></div>
+                    <div><span class="gen-ai-button" id="genAiButton"><span class="ai-dot"></span><span class="button-text">gen ai content generation.</span></span></div>
                     <div>Vibe code web design</div>
                     <div>Adobe Premiere Pro Video Editing</div>
                     <div>AI financial analysis/modeling</div>
@@ -508,10 +537,12 @@
                 <div class="skill-category">
                     <div class="skill-label">Interests</div>
                     <div class="skill-value">
-                        Elite tennis player, nationally ranked junior<br>
-                        Self-taught mechanic, rebuilt a rusted '89 Land Rover Defender<br>
-                        Street Photography<br>
-                        Health, fitness, nutrition, longevity, cycling
+                        <ul style="list-style-type: square; margin: 0; padding-left: 1.25rem;">
+                            <li style="margin-bottom: 0.25rem;">Elite tennis player, nationally ranked junior</li>
+                            <li style="margin-bottom: 0.25rem;">Self-taught mechanic, rebuilt a rusted '89 Land Rover Defender</li>
+                            <li style="margin-bottom: 0.25rem;">Street Photography</li>
+                            <li style="margin-bottom: 0;">Health and Metacognition</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -546,15 +577,20 @@
         const fonts = [
             "'Compacta', sans-serif",
             "'Dameon', cursive",
-            "'Laripagi', serif",
-            "'RclMonoskrn', monospace"
+            "'Laripagi', serif"
+        ];
+        
+        // Font size adjustments to normalize visual height
+        const fontSizes = [
+            "1rem",      // Compacta
+            "0.95rem",   // Dameon (slightly smaller)
+            "0.98rem"    // Laripagi
         ];
         
         const colors = [
             "linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%)", // Curate Orange
             "linear-gradient(135deg, #ff7e47 0%, #ffa06d 100%)", // Light Orange
-            "linear-gradient(135deg, #ff5722 0%, #ff7043 100%)", // Deep Orange
-            "linear-gradient(135deg, #ff9966 0%, #ffb380 100%)"  // Soft Orange
+            "linear-gradient(135deg, #ff5722 0%, #ff7043 100%)"  // Deep Orange
         ];
         
         let currentFontIndex = 0;
@@ -566,22 +602,47 @@
                 clearInterval(intervalId);
                 intervalId = null;
                 genAiButton.style.fontFamily = "'Compacta', sans-serif";
+                genAiButton.style.fontSize = "1rem";
                 genAiButton.style.background = "#2a2a2a";
+                const buttonText = genAiButton.querySelector('.button-text');
+                if (buttonText) buttonText.style.opacity = '1';
                 currentFontIndex = 0;
             } else {
                 // Start animation
+                const buttonText = genAiButton.querySelector('.button-text');
                 intervalId = setInterval(() => {
-                    currentFontIndex = (currentFontIndex + 1) % fonts.length;
-                    genAiButton.style.fontFamily = fonts[currentFontIndex];
+                    // Fade out text only
+                    if (buttonText) buttonText.style.opacity = '0.3';
+                    
+                    setTimeout(() => {
+                        currentFontIndex = (currentFontIndex + 1) % fonts.length;
+                        genAiButton.style.fontFamily = fonts[currentFontIndex];
+                        genAiButton.style.fontSize = fontSizes[currentFontIndex];
+                        
+                        // Fade text back in
+                        if (buttonText) buttonText.style.opacity = '1';
+                    }, 300); // Wait 300ms mid-transition
+                    
                 }, 3000); // Change every 3000ms (3 seconds)
             }
         });
 
         // Auto-start animation on page load
         window.addEventListener('DOMContentLoaded', function() {
+            const buttonText = genAiButton.querySelector('.button-text');
             intervalId = setInterval(() => {
-                currentFontIndex = (currentFontIndex + 1) % fonts.length;
-                genAiButton.style.fontFamily = fonts[currentFontIndex];
+                // Fade out text only
+                if (buttonText) buttonText.style.opacity = '0.3';
+                
+                setTimeout(() => {
+                    currentFontIndex = (currentFontIndex + 1) % fonts.length;
+                    genAiButton.style.fontFamily = fonts[currentFontIndex];
+                    genAiButton.style.fontSize = fontSizes[currentFontIndex];
+                    
+                    // Fade text back in
+                    if (buttonText) buttonText.style.opacity = '1';
+                }, 300); // Wait 300ms mid-transition
+                
             }, 3000); // Change every 3000ms (3 seconds)
         });
     </script>
